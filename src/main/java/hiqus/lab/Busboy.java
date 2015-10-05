@@ -56,7 +56,7 @@ public class Busboy {
     }
 
     public void test() {
-        String sql = "SELECT count(*) FROM RASCA_CUMC_PROTOCOL";
+        String sql = "SELECT count(*) FROM PROTOCOL";
         // return cumcJdbcTemplate.queryForObject(SQL_TEST, Integer.class, protocolNumber) == 1;
         Integer outbox = cumcJdbcTemplate.queryForObject(sql, Integer.class);
         log.info("outbox = {}", outbox);
