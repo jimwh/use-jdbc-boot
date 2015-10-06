@@ -22,6 +22,7 @@ public class Application {
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
         Busboy busboy = ctx.getBean(Busboy.class);
         busboy.test();
+        busboy.truncateTables();
         log.info("application end...");
     }
 }

@@ -14,26 +14,23 @@ public class Busboy {
     private static final String SQL_TABLE_RASCAL_CUMC_DOCUMENT = "select count(1) from ALL_TABLES where TABLE_NAME='RASCAL_CUMC_DOCUMENT'";
 
     private static final String SQL_TABLE_CREATE_RASCAL_CUMC_PROTOCOL =
-            "create table RASCAL_CUMC_PROTOCOL (" +
-                    " PROTOCOLNUMBER     VARCHAR2(10)  NOT NULL," +
+            "create table dbo.PROTOCOL (" +
+                    " PROTOCOLNUMBER     VARCHAR2(10)  PRIMARY KEY NOT NULL," +
                     " SUFFIX             VARCHAR2(8)   NOT NULL," +
                     " PROTOCOLTITLE      VARCHAR2(500) NOT NULL," +
-                    " APPROVALDATE       TIMESTAMP," +
-                    " CONSTRAINT r2cprotocol_pk PRIMARY KEY (PROTOCOLNUMBER) )";
+                    " APPROVALDATE       DATETIME)";
 
     private static final String SQL_TABLE_CREATE_RASCAL_CUMC_DOCUMENT =
-            "create table RASCAL_CUMC_DOCUMENT (" +
-                    " ID                  VARCHAR2(20)  NOT NULL," +
+            "create table dbo.DOCUMENT (" +
+                    " ID                  VARCHAR2(20)  PRIMARY KEY NOT NULL," +
                     " PROTOCOLNUMBER      VARCHAR2(10)  NOT NULL," +
                     " DOCUMENTTYPE        VARCHAR2(90)  NOT NULL," +
                     " FILENAME            VARCHAR2(255) NOT NULL," +
                     " DOCUMENTIDENTIFIER  VARCHAR2(60)  NOT NULL," +
                     " DOCUMENTDATA        BLOB          NOT NULL," +
-                    " CONSTRAINT r2cdocument_pk PRIMARY KEY (ID)," +
-                    " CONSTRAINT fk_protocol" +
+                    " CONSTRAINT fk_doc_protocol" +
                     " FOREIGN KEY (PROTOCOLNUMBER)" +
-                    " REFERENCES RASCAL_CUMC_PROTOCOL(PROTOCOLNUMBER) )";
-
+                    " REFERENCES PROTOCOL(PROTOCOLNUMBER) )";
 
     private static final Logger log = LoggerFactory.getLogger(Busboy.class);
 
@@ -57,13 +54,11 @@ public class Busboy {
 
     public void test() {
         String sql = "SELECT count(*) FROM PROTOCOL";
-        // return cumcJdbcTemplate.queryForObject(SQL_TEST, Integer.class, protocolNumber) == 1;
         Integer outbox = cumcJdbcTemplate.queryForObject(sql, Integer.class);
         log.info("outbox = {}", outbox);
     }
 
     public void houseKeeper() {
-
         if (!hasProtocolTable()) {
             log.info("creating RASCAL_CUMC_PROTOCOL table");
             createProtocolTable();
@@ -71,7 +66,6 @@ public class Busboy {
             log.info("truncate protocol table now...");
             truncateProtocolTable();
         }
-
         if (!hasDocumentTable()) {
             log.info("creating RASCAL_CUMC_DOCUMENT table");
             createDocumentTable();
@@ -86,7 +80,7 @@ public class Busboy {
     private void truncateProtocolTable() {
         String[] sql = {
                 "alter table RASCAL_CUMC_DOCUMENT disable constraint fk_protocol",
-                "TRUNCATE table RASCAL_CUMC_PROTOCOL",
+                "TRUNCATE table PROTOCOL",
                 // "TRUNCATE table RASCAL_CUMC_DOCUMENT",
                 // "alter table RASCAL_CUMC_DOCUMENT enable constraint fk_protocol",
         };
@@ -94,30 +88,28 @@ public class Busboy {
     }
 
     private void truncateDocumentTable() {
-
         String[] sql = {
-                "TRUNCATE table RASCAL_CUMC_DOCUMENT",
+                "TRUNCATE table DOCUMENT",
                 // "alter table RASCAL_CUMC_DOCUMENT enable constraint fk_protocol",
         };
         cumcJdbcTemplate.batchUpdate(sql);
     }
 
-    /*
-    private void truncateTables() {
+
+    public void truncateTables() {
         log.info("truncate table now...");
         String[] sql = {
-                "alter table RASCAL_CUMC_DOCUMENT disable constraint fk_protocol",
-                "TRUNCATE table RASCAL_CUMC_PROTOCOL",
-                "TRUNCATE table RASCAL_CUMC_DOCUMENT",
-                "alter table RASCAL_CUMC_DOCUMENT enable constraint fk_protocol",
+                //"alter table RASCAL_CUMC_DOCUMENT disable constraint fk_protocol",
+                "TRUNCATE table DOCUMENT",
+                "TRUNCATE table PROTOCOL",
+                //"alter table RASCAL_CUMC_DOCUMENT enable constraint fk_protocol",
                 };
         cumcJdbcTemplate.batchUpdate(sql);
     }
-    */
+
 
     public boolean hasProtocolTable() {
-        //int one = cumcJdbcTemplate.queryForObject(SQL_TABLE_RASCAL_CUMC_PROTOCOL, Integer.class);
-        String sql = "SELECT count(*) FROM RASCAL_CUMC_PROTOCOL";
+        String sql = "SELECT count(*) FROM PROTOCOL";
         Integer one = cumcJdbcTemplate.queryForObject(sql, Integer.class);
         return one == null ? false : true;
     }
