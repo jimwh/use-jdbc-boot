@@ -10,12 +10,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-@Component
 public class BlobToFile {
 
     private static final Logger log = LoggerFactory.getLogger(BlobToFile.class);
 
-    public void blobFile(String dir, String fileName, InputStream in) {
+    public BlobToFile(String dir, String fileName, InputStream in) {
         folder(dir);
         blobToFile(fileName, in);
     }

@@ -20,7 +20,7 @@ public class Busboy {
     }
 
     public void test() {
-        String sql = "SELECT count(*) FROM document";
+        String sql = "SELECT count(*) FROM rascal_cumc_document";
         Integer outbox = primaryJdbcTemplate.queryForObject(sql, Integer.class);
         log.info("outbox = {}", outbox);
     }
