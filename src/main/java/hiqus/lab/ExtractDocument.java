@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class ExtractDocument implements RowCallbackHandler {
 
     public static final String
-            SQL_EXTRACT_DOCUMENT = "select * from rascal_cumc_document order by protocolNumber";
+            SQL_EXTRACT_DOCUMENT = "select * from document order by protocolNumber";
 
     private static final Logger log = LoggerFactory.getLogger(ExtractDocument.class);
 

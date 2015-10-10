@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLException;
+
 @Component
 public class Busboy {
 
@@ -17,10 +19,16 @@ public class Busboy {
     @Autowired
     public Busboy(@Qualifier("primaryJdbcTemplate") JdbcTemplate primaryJdbcTemplate) {
         this.primaryJdbcTemplate = primaryJdbcTemplate;
+        try {
+            log.info("databaseName={}", primaryJdbcTemplate.getDataSource().getConnection().getMetaData().getDatabaseProductName());
+        } catch (SQLException e) {
+            log.error("caught: ", e);
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public void test() {
-        String sql = "SELECT count(*) FROM rascal_cumc_document";
+        String sql = "SELECT count(*) FROM document";
         Integer outbox = primaryJdbcTemplate.queryForObject(sql, Integer.class);
         log.info("outbox = {}", outbox);
     }
