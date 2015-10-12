@@ -20,9 +20,6 @@ public class ExtractDocument implements RowCallbackHandler {
 
     private final String downloadDirectory;
 
-//    @Resource
-//    private BlobToFile blobToFile;
-
     public ExtractDocument(String downloadDirectory) {
         this.downloadDirectory = downloadDirectory;
     }
@@ -35,14 +32,21 @@ public class ExtractDocument implements RowCallbackHandler {
             throw new SQLException("foo barr...");
 
         String protocolNumber = resultSet.getString("PROTOCOLNUMBER");
-        String documentType = resultSet.getString("DOCUMENTTYPE");
         String fileName = resultSet.getString("FILENAME");
+
+        String documentType = resultSet.getString("DOCUMENTTYPE");
         String documentIdentifier = resultSet.getString("DOCUMENTIDENTIFIER");
 
         InputStream in = blob.getBinaryStream();
+        if (in == null) return;
         String folder = downloadDirectory + File.separator + protocolNumber;
         fileName = folder + File.separator + fileName;
         new BlobToFile(folder, fileName, in);
+        try {
+            in.close();
+        } catch (IOException e) {
+            log.error("caught: ", e);
+        }
     }
 
 }

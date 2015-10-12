@@ -24,14 +24,13 @@ public class Extractor {
     @Resource
     private RascalZipper zipper;
 
-    @Autowired
+    @Resource
     private Environment env;
 
     @Autowired
     public Extractor(JdbcTemplate jt) {
         this.jdbcTemplate = jt;
     }
-
 
     public void start() throws IOException {
         this.downloadDirectory=env.getProperty("downloadDirectory");

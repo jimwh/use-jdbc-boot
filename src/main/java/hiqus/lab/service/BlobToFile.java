@@ -31,7 +31,8 @@ public class BlobToFile {
             OutputStream os = new FileOutputStream(new File(fileName));
             FileCopyUtils.copy(in, os);
             os.close();
-            in.close();
+            // don't close input stream here, let caller close it
+            // in.close();
         } catch (Exception e) {
             log.error("caught: ", e);
         }

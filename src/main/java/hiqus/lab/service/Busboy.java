@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 @Component
@@ -20,7 +21,12 @@ public class Busboy {
     public Busboy(@Qualifier("primaryJdbcTemplate") JdbcTemplate primaryJdbcTemplate) {
         this.primaryJdbcTemplate = primaryJdbcTemplate;
         try {
-            log.info("databaseName={}", primaryJdbcTemplate.getDataSource().getConnection().getMetaData().getDatabaseProductName());
+            DatabaseMetaData metaData = primaryJdbcTemplate.getDataSource().getConnection().getMetaData();
+            String productName = metaData.getDatabaseProductName();
+            String version = metaData.getDatabaseProductVersion();
+            int major = metaData.getDatabaseMajorVersion();
+            int minor = metaData.getDatabaseMinorVersion();
+            log.info("product-{}, version-{}, major-{}, minor-{}", productName, version, major, minor);
         } catch (SQLException e) {
             log.error("caught: ", e);
             throw new RuntimeException(e.getMessage());
