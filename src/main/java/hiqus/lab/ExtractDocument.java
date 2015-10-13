@@ -14,7 +14,11 @@ import java.sql.SQLException;
 public class ExtractDocument implements RowCallbackHandler {
 
     public static final String
-            SQL_EXTRACT_DOCUMENT = "select * from document order by protocolNumber";
+            SQL_EXTRACT_DOCUMENT =
+            "select p.protocolnumber, p.suffix, d.ID, d.documenttype, d.filename, d.documentdata" +
+            "  from protocol p, document d" +
+            "  where p.protocolnumber = d.protocolnumber" +
+            "  order by p.PROTOCOLNUMBER";
 
     private static final Logger log = LoggerFactory.getLogger(ExtractDocument.class);
 
@@ -32,14 +36,14 @@ public class ExtractDocument implements RowCallbackHandler {
             throw new SQLException("foo barr...");
 
         String protocolNumber = resultSet.getString("PROTOCOLNUMBER");
+        String suffix = resultSet.getString("SUFFIX");
+        String docId = resultSet.getString("ID");
         String fileName = resultSet.getString("FILENAME");
-
         String documentType = resultSet.getString("DOCUMENTTYPE");
-        String documentIdentifier = resultSet.getString("DOCUMENTIDENTIFIER");
 
         InputStream in = blob.getBinaryStream();
         if (in == null) return;
-        String folder = downloadDirectory + File.separator + protocolNumber;
+        String folder = downloadDirectory + File.separator + protocolNumber+"_"+suffix+"_"+docId;
         fileName = folder + File.separator + fileName;
         new BlobToFile(folder, fileName, in);
         try {

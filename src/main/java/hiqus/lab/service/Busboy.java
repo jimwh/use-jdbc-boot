@@ -26,7 +26,8 @@ public class Busboy {
             String version = metaData.getDatabaseProductVersion();
             int major = metaData.getDatabaseMajorVersion();
             int minor = metaData.getDatabaseMinorVersion();
-            String info = String.format("product-%s, version-%s, major-%d, minor-%d", productName, version, major, minor);
+            String info = String.format("product: %s, version: %s, major: %d, minor: %d",
+                    productName, version, major, minor);
             log.info(info);
         } catch (SQLException e) {
             log.error("caught: ", e);
