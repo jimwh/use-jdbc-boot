@@ -51,10 +51,5 @@ public class Busboy {
             }
         }
     }
-    public void testInfo() {
-        final String sql = "SELECT count(*) FROM document";
-        final Integer outbox = primaryJdbcTemplate.queryForObject(sql, Integer.class);
-        log.info("outbox = {}", outbox);
-    }
 
 }
