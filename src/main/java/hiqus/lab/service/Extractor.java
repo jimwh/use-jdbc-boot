@@ -48,7 +48,7 @@ public class Extractor {
         jdbcTemplate.query(ExtractDocument.SQL_EXTRACT_DOCUMENT,
                 new ExtractDocument(downloadDirectory));
 
-        // zipper.zipFiles(downloadDirectory);
+        zipper.zipFiles(downloadDirectory);
 
     }
 

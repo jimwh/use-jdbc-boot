@@ -5,8 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowCallbackHandler;
 
-import javax.annotation.Resource;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,19 +32,22 @@ public class ExtractDocument implements RowCallbackHandler {
     @Override
     public void processRow(ResultSet resultSet) throws SQLException {
 
-        Blob blob = resultSet.getBlob("DOCUMENTDATA");
-        if (blob == null)
+        final Blob blob = resultSet.getBlob("DOCUMENTDATA");
+        if (blob == null) {
             throw new SQLException("foo barr...");
+        }
 
-        String protocolNumber = resultSet.getString("PROTOCOLNUMBER");
-        String suffix = resultSet.getString("SUFFIX");
-        String docId = resultSet.getString("ID");
+        final String protocolNumber = resultSet.getString("PROTOCOLNUMBER");
+        final String suffix = resultSet.getString("SUFFIX");
+        final String docId = resultSet.getString("ID");
         String fileName = resultSet.getString("FILENAME");
-        String documentType = resultSet.getString("DOCUMENTTYPE");
+        // String documentType = resultSet.getString("DOCUMENTTYPE");
 
-        InputStream in = blob.getBinaryStream();
-        if (in == null) return;
-        String folder = downloadDirectory + File.separator + protocolNumber+"_"+suffix+"_"+docId;
+        final InputStream in = blob.getBinaryStream();
+        if (in == null) {
+            return;
+        }
+        final String folder = downloadDirectory + File.separator + protocolNumber+"_"+suffix+"_"+docId;
         fileName = folder + File.separator + fileName;
         new BlobToFile(folder, fileName, in);
         try {

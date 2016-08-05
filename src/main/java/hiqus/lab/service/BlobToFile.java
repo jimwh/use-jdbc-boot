@@ -14,21 +14,21 @@ public class BlobToFile {
 
     private static final Logger log = LoggerFactory.getLogger(BlobToFile.class);
 
-    public BlobToFile(String dir, String fileName, InputStream in) {
+    public BlobToFile(final String dir, final String fileName, final InputStream in) {
         folder(dir);
         blobToFile(fileName, in);
     }
 
-    private void folder(String dir) {
-        File file = new File(dir);
+    private void folder(final String dir) {
+        final File file = new File(dir);
         if (!file.exists()) {
-            file.mkdirs();
+            boolean bool = file.mkdirs();
         }
     }
 
-    private void blobToFile(String fileName, InputStream in) {
+    private void blobToFile(final String fileName, final InputStream in) {
         try {
-            OutputStream os = new FileOutputStream(new File(fileName));
+            final OutputStream os = new FileOutputStream(new File(fileName));
             FileCopyUtils.copy(in, os);
             os.close();
             // don't close input stream here, let caller close it
