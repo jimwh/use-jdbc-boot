@@ -26,6 +26,6 @@ hs_err_pid*
 logs/
 *.log
 
-.target/
+target/
 .classpath/
 .project/
