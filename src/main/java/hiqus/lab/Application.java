@@ -1,5 +1,6 @@
 package hiqus.lab;
 
+import hiqus.lab.service.Busboy;
 import hiqus.lab.service.Extractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,12 @@ public class Application {
 
         final ApplicationContext ctx = SpringApplication.run(Application.class, args);
 
+        /*
         final Extractor extractor = ctx.getBean(Extractor.class);
         extractor.start();
-
+        */
+        final Busboy busboy = ctx.getBean(Busboy.class);
+        busboy.fetch();
         SpringApplication.exit(ctx);
         log.info("application end...");
     }

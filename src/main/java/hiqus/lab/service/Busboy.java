@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class Busboy {
@@ -52,4 +54,11 @@ public class Busboy {
         }
     }
 
+    public void fetch() {
+        String sql = "select VALUE from SAKAI_SITE_PROPERTY where SITE_ID like 'CHEMG%' ";
+        final List<Map<String, Object>> list=primaryJdbcTemplate.queryForList(sql);
+        for(Map<String, Object>map: list) {
+            log.info("value={}", map.get("VALUE"));
+        }
+    }
 }
